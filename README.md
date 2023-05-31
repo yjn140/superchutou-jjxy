@@ -2,6 +2,8 @@
 <u>**注意！此脚本仅用于技术交流，不得欺骗刷课，不得构造攻击！**</u>
 <u>**更不得卖钱！我看不起你！</u>**
 
+打包好的可执行程序下载：[下载界面](https://github.com/yjn140/superchutou-jjxy/releases)
+
 使用方法
 
 1. 安装python环境
