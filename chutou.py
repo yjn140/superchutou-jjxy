@@ -202,7 +202,7 @@ if stu_id:
             while total_duration < duration + 100:
                 # 学习视频
                 learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟
-                print(f"视频还剩 {duration + 100 - total_duration} s ，请耐心，等待慢点好！")
+                print(f"视频还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
                 # 处理学习结果
                 # ...
                 time.sleep(59)  # 等待59秒
