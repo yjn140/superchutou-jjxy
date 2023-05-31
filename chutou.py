@@ -202,12 +202,10 @@ if stu_id:
             while total_duration < duration + 100:
                 # 学习视频
                 learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟
-                print(f"视频还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
-                # 处理学习结果
-                # ...
+                print(f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
                 time.sleep(59)  # 等待59秒
                 total_duration += 60  # 假设每次学习60秒钟
-            print(f"视频 {name} {video_code} 完成学习")
-        print(f"{description} 课程 {description} {course_id} 的所有视频已完成学习")
+            print(f"{description}  视频 {name} {video_code} 完成学习\n")
+        print(f"课程 {description} {course_id} 的所有视频已完成学习")
 else:
     print("登录失败！请检查用户名和密码。")
