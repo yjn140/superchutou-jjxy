@@ -19,7 +19,7 @@
 于是就花了一个晚上，大概是九点钟抓包，九点半摆烂进群求软件，发现收费开始认真研究。凌晨一点代码就写完了。
 不得不说，chatGPT极大地帮助了我。根据我的描述出框架，根据每一个环节的请求和返回的响应完善每个函数代码。
 大概逻辑就是登录拿到key，获取课程列表拿到课程code，获得课程视频的code，然后发送保存视频播放进度的请求。循环！循环！
-代码简陋，能用就行。没有trycatch，没有加速，没有多线程，就图一个省事和安全
+代码简陋，能用就行。没有tryexcept，没有加速，没有多线程，就图一个省事和安全
 """
 
 import secrets
@@ -201,10 +201,17 @@ if stu_id:
             name = video["Name"]
             while total_duration < duration + 100:
                 # 学习视频
-                learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟
-                print(f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
-                time.sleep(59)  # 等待59秒
-                total_duration += 60  # 假设每次学习60秒钟
+                try:
+                    learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟
+                    print(f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
+                    time.sleep(59)  # 等待59秒
+                    total_duration += 60  # 假设每次学习60秒钟
+                except:
+                    time.sleep(61)
+                    learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟
+                    print(f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
+                    time.sleep(59)  # 等待59秒
+                    total_duration += 60  # 假设每次学习60秒钟
             print(f"{description}  视频 {name} {video_code} 完成学习\n")
         print(f"课程 {description} {course_id} 的所有视频已完成学习")
 else:
