@@ -24,7 +24,10 @@
 
 import secrets
 import time
+
 import requests
+
+
 
 session_id = secrets.token_hex(16)
 
@@ -35,7 +38,7 @@ def login(username, password):
         "card": username,
         "password": password,
         "IsOauth": 0,
-        "IsEncryptPasword": 1,#这里开发人员还拼错了
+        "IsEncryptPasword": 1,  # 这里开发人员还拼错了
         "Specialty_ID": 0,
         "notVerifyPhone": True,
         "CardNumber": username,
@@ -147,7 +150,7 @@ def get_course_videos(cookie, course_id, curriculum_id):
 
 # 学习视频
 def learn_video(cookie, course_chapters_id, look_time):
-    # proxies = {'http': 'http://127.0.0.1:8081', 'https': 'http://127.0.0.1:8081'}
+    proxies = {'http': 'http://127.0.0.1:8081', 'https': 'http://127.0.0.1:8081'}
     url = "http://jjxy.web2.superchutou.com/service/datastore/WebCourse/SaveCourse_Look"
     headers = {
         "Accept": "*/*",
@@ -174,9 +177,17 @@ def learn_video(cookie, course_chapters_id, look_time):
     return response
 
 
+
+
+
 # 输入用户名和密码
 username = input("请输入用户名：")
 password = input("请输入密码：")
+
+
+# 每隔几秒保存一次60s的观看速度
+# 这个地方越小，速度越快，但是不建议改
+timetime = float(input("请输入刷课速度（比如输入 5 表示 每五秒保存一次60s的视频观看进度）："))
 
 # 登录
 stu_id = login(username, password)
@@ -196,21 +207,23 @@ if stu_id:
         course_videos = get_course_videos(stu_id, course_id, curriculum_id)
         for video in course_videos:
             video_code = video["ID"]
-            total_duration = video["TotalSecond"]
-            duration = video["Duration"]
+            total_duration = int(video["TotalSecond"])
+            duration = int(video["Duration"])
             name = video["Name"]
             while total_duration < duration + 100:
                 # 学习视频
                 try:
-                    learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟
-                    print(f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
-                    time.sleep(59)  # 等待59秒
+                    learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟，最好别改动这个
+                    print(
+                        f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
+                    time.sleep(timetime)
                     total_duration += 60  # 假设每次学习60秒钟
                 except:
                     time.sleep(61)
-                    learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟
-                    print(f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
-                    time.sleep(59)  # 等待59秒
+                    learn_response = learn_video(stu_id, video_code, 60)  # 学习60秒钟，最好别改动这个
+                    print(
+                        f"{description}  视频 {name} {video_code} 还剩 {duration + 100 - total_duration} s ，请耐心等待,慢点好！")
+                    time.sleep(timetime)
                     total_duration += 60  # 假设每次学习60秒钟
             print(f"{description}  视频 {name} {video_code} 完成学习\n")
         print(f"课程 {description} {course_id} 的所有视频已完成学习")
