@@ -7,6 +7,7 @@
 
 1. 浏览器登录界面，查看cookies
 2. 运行代码，分别输入cookies的两个参数的值
+![](https://yjn140.site/post-images/1690542650553.png)
 
 ~~打包好的可执行程序下载：[下载界面](https://github.com/yjn140/superchutou-jjxy/releases)~~（还没更新）
 
