@@ -26,50 +26,47 @@ import secrets
 import time
 
 import requests
+requests.packages.urllib3.disable_warnings()
 
 
-
-session_id = secrets.token_hex(16)
-
-
-# 登录请求
-def login(username, password):
-    login_data = {
-        "card": username,
-        "password": password,
-        "IsOauth": 0,
-        "IsEncryptPasword": 1,  # 这里开发人员还拼错了
-        "Specialty_ID": 0,
-        "notVerifyPhone": True,
-        "CardNumber": username,
-        "Password": password
-    }
-    headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        "Accept": "*/*",
-        "Referer": "http://jjxy.web2.superchutou.com/",
-        "Cookie": "sessionId=" + session_id,
-        "Origin": "http://jjxy.web2.superchutou.com"
-    }
-    login_response = requests.post(
-        "http://jjxy.web2.superchutou.com/service/eduSuper/Student/BindStudentLoginByCardNumber", json=login_data,
-        headers=headers)
-    response_data = login_response.json()
-    if response_data["ResponseCode"] == 0:
-        stu_id = response_data["Data"]["StuID"]
-        return stu_id
-    else:
-        return None
+# # 登录请求
+# def login(username, password):
+#     login_data = {
+#         "card": username,
+#         "password": password,
+#         "IsOauth": 0,
+#         "IsEncryptPasword": 1,  # 这里开发人员还拼错了
+#         "Specialty_ID": 0,
+#         "notVerifyPhone": True,
+#         "CardNumber": username,
+#         "Password": password
+#     }
+#     headers = {
+#         "Content-Type": "application/json; charset=utf-8",
+#         "Accept": "*/*",
+#         "Referer": "http://jjxy.web2.superchutou.com/",
+#         "Origin": "http://jjxy.web2.superchutou.com"
+#     }
+#     cookies={"Cookie": "sessionId=" + session_id}
+#     login_response = requests.post(
+#         "http://jjxy.web2.superchutou.com/service/eduSuper/Student/BindStudentLoginByCardNumber", json=login_data ,proxies=proxies,
+#         headers=headers,cookies=cookies)
+#     response_data = login_response.json()
+#     if response_data["ResponseCode"] == 0:
+#         stu_id = response_data["Data"]["StuID"]
+#         return stu_id
+#     else:
+#         return None
 
 
 # 获取学生详细信息
 def get_student_details(stu_id):
-    headers = {
+    cookies = {
         "Cookie": f"UserKey={stu_id}; sessionId=" + session_id
     }
     student_details_response = requests.get(
-        "http://jjxy.web2.superchutou.com/service/eduSuper/StudentinfoDetail/GetStudentDetailRegisterSet",
-        headers=headers)
+        "https://jjxy.web2.superchutou.com:443/service/eduSuper/StudentinfoDetail/GetStudentDetailRegisterSet",
+        cookies=cookies)
     student_details_data = student_details_response.json()
     if student_details_data["ResponseCode"] == 0:
         student_info = student_details_data["Data"][0]
@@ -84,12 +81,12 @@ def get_student_details(stu_id):
 
 # 获取所有课程
 def get_courses(cookie, StuDetail_ID):
-    headers = {
+    cookies = {
         "Cookie": f"UserKey={cookie}; sessionId=" + session_id
     }
     courses_response = requests.get(
         "http://jjxy.web2.superchutou.com/service/eduSuper/Specialty/GetStuSpecialtyCurriculumList?StuDetail_ID=" + StuDetail_ID + "&IsStudyYear=1&StuID=" + stu_id + "",
-        headers=headers)
+        cookies=cookies)
     courses_data = courses_response.json()
     if not courses_data.get("SuccessResponse"):
         raise Exception("操作失败")
@@ -109,13 +106,13 @@ def get_courses(cookie, StuDetail_ID):
 def get_course_videos(cookie, course_id, curriculum_id):
     import requests
 
-    headers = {
+    cookies = {
         "Cookie": f"UserKey={cookie}; sessionId=" + session_id
     }
 
     course_videos_response = requests.get(
         f"http://jjxy.web2.superchutou.com/service/eduSuper/Question/GetCourse_ChaptersNodeList?Valid=1&Course_ID={course_id}&Curriculum_ID={curriculum_id}",
-        headers=headers)
+        cookies=cookies)
 
     course_videos_data = course_videos_response.json()
 
@@ -150,7 +147,7 @@ def get_course_videos(cookie, course_id, curriculum_id):
 
 # 学习视频
 def learn_video(cookie, course_chapters_id, look_time):
-    proxies = {'http': 'http://127.0.0.1:8081', 'https': 'http://127.0.0.1:8081'}
+
     url = "http://jjxy.web2.superchutou.com/service/datastore/WebCourse/SaveCourse_Look"
     headers = {
         "Accept": "*/*",
@@ -159,7 +156,6 @@ def learn_video(cookie, course_chapters_id, look_time):
         "Cache-Control": "no-cache",
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Cookie": f"UserKey={cookie}; sessionId=" + session_id,
         "DNT": "1",
         "Origin": "http://jjxy.web2.superchutou.com",
         "Pragma": "no-cache",
@@ -167,13 +163,14 @@ def learn_video(cookie, course_chapters_id, look_time):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73",
         "sec-gpc": "1"
     }
+    cookies={"Cookie": f"UserKey={cookie}; sessionId=" + session_id}
     payload = {
         "CourseChapters_ID": course_chapters_id,
         "LookType": 0,
         "LookTime": look_time,
         "IP": "IP无法获取"
     }
-    response = requests.post(url, headers=headers, json=payload, verify=False)
+    response = requests.post(url, headers=headers, json=payload, verify=False, cookies=cookies)
     return response
 
 
@@ -181,16 +178,19 @@ def learn_video(cookie, course_chapters_id, look_time):
 
 
 # 输入用户名和密码
-username = input("请输入用户名：")
-password = input("请输入密码：")
+# username = input("请输入用户名：")
+# password = input("请输入密码：")
+print("页面登录成功后，可以直接去cookies里面找sessionId和UserKey两个参数")
+session_id = str(input("请输入sessionId："))
+stu_id=(input("请输入UserKey："))
 
+proxies = {'http': 'http://127.0.0.1:8081', 'https': 'http://127.0.0.1:8081'}
 
 # 每隔几秒保存一次60s的观看速度
 # 这个地方越小，速度越快，但是不建议改
-timetime = float(input("请输入刷课速度（比如输入 5 表示 每五秒保存一次60s的视频观看进度）："))
+timetime = float(input("请输入刷课速度（比如输入 5 表示 每五秒保存一次60s的视频观看进度）  最好是60s，其他时间会失效："))
 
-# 登录
-stu_id = login(username, password)
+
 if stu_id:
     print("登录成功！")
     # 打印学生信息
