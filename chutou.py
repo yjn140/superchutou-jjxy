@@ -44,12 +44,12 @@ requests.packages.urllib3.disable_warnings()
 #     headers = {
 #         "Content-Type": "application/json; charset=utf-8",
 #         "Accept": "*/*",
-#         "Referer": "http://jjxy.web2.superchutou.com/",
-#         "Origin": "http://jjxy.web2.superchutou.com"
+#         "Referer": "https://jjxy.web2.superchutou.com/",
+#         "Origin": "https://jjxy.web2.superchutou.com"
 #     }
 #     cookies={"Cookie": "sessionId=" + session_id}
 #     login_response = requests.post(
-#         "http://jjxy.web2.superchutou.com/service/eduSuper/Student/BindStudentLoginByCardNumber", json=login_data ,proxies=proxies,
+#         "https://jjxy.web2.superchutou.com/service/eduSuper/Student/BindStudentLoginByCardNumber", json=login_data ,proxies=proxies,
 #         headers=headers,cookies=cookies)
 #     response_data = login_response.json()
 #     if response_data["ResponseCode"] == 0:
@@ -85,7 +85,7 @@ def get_courses(cookie, StuDetail_ID):
         "Cookie": f"UserKey={cookie}; sessionId=" + session_id
     }
     courses_response = requests.get(
-        "http://jjxy.web2.superchutou.com/service/eduSuper/Specialty/GetStuSpecialtyCurriculumList?StuDetail_ID=" + StuDetail_ID + "&IsStudyYear=1&StuID=" + stu_id + "",
+        "https://jjxy.web2.superchutou.com/service/eduSuper/Specialty/GetStuSpecialtyCurriculumList?StuDetail_ID=" + StuDetail_ID + "&IsStudyYear=1&StuID=" + stu_id + "",
         cookies=cookies)
     courses_data = courses_response.json()
     if not courses_data.get("SuccessResponse"):
@@ -111,7 +111,7 @@ def get_course_videos(cookie, course_id, curriculum_id):
     }
 
     course_videos_response = requests.get(
-        f"http://jjxy.web2.superchutou.com/service/eduSuper/Question/GetCourse_ChaptersNodeList?Valid=1&Course_ID={course_id}&Curriculum_ID={curriculum_id}",
+        f"https://jjxy.web2.superchutou.com/service/eduSuper/Question/GetCourse_ChaptersNodeList?Valid=1&Course_ID={course_id}&Curriculum_ID={curriculum_id}",
         cookies=cookies)
 
     course_videos_data = course_videos_response.json()
@@ -148,7 +148,7 @@ def get_course_videos(cookie, course_id, curriculum_id):
 # 学习视频
 def learn_video(cookie, course_chapters_id, look_time):
 
-    url = "http://jjxy.web2.superchutou.com/service/datastore/WebCourse/SaveCourse_Look"
+    url = "https://jjxy.web2.superchutou.com/service/datastore/WebCourse/SaveCourse_Look"
     headers = {
         "Accept": "*/*",
         "Accept-Language": "zh-CN,zh;q=0.9",
@@ -157,9 +157,9 @@ def learn_video(cookie, course_chapters_id, look_time):
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
         "DNT": "1",
-        "Origin": "http://jjxy.web2.superchutou.com",
+        "Origin": "https://jjxy.web2.superchutou.com",
         "Pragma": "no-cache",
-        "Referer": "http://jjxy.web2.superchutou.com/",
+        "Referer": "https://jjxy.web2.superchutou.com/",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73",
         "sec-gpc": "1"
     }
