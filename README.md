@@ -15,7 +15,7 @@
 
 1. 安装python环境
 
-2. 使用pip命令安装requests库  `pip install requests`
+2. 使用pip命令安装requests urllib3库  `python -m  pip install -r requirements.txt ` (是python3还是python取决于你引用python命令)
 
 3. 运行这个脚本  `python chutou.py` 或者是 `python3 chutou.py`
 
