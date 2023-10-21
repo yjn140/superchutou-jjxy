@@ -10,8 +10,8 @@
 更不得卖钱！我看不起你！
 
 使用方法
-1.安装python环境
-2.使用pip命令安装requests库  pip install requests
+1.安装python环境 (winget install python或scoop install python )
+2.使用pip命令安装requests urllib3库 pip install requests urllib3
 3.运行这个脚本  python chutou.py 或者是 python3 chutou.py
 4.输入用户名 回车 输入密码 回车
 
